@@ -1,0 +1,35 @@
+{
+ "week": "2026-W46-start",
+ "posts": [
+  {
+   "slug": "01-make-a-decision",
+   "hook": "принять решение",
+   "bad": "accept a decision",
+   "good": "make a decision",
+   "ru": "принять решение",
+   "ex": "It took us a week to make a decision about the flat.",
+   "exru": "Нам понадобилась неделя, чтобы принять решение насчёт квартиры.",
+   "why": "Accept a decision значит «согласиться с чужим решением»."
+  },
+  {
+   "slug": "02-heavy-rain",
+   "hook": "сильный дождь",
+   "bad": "strong rain",
+   "good": "heavy rain",
+   "ru": "сильный дождь, ливень",
+   "ex": "Heavy rain closed several roads last night.",
+   "exru": "Вчера вечером из-за сильного дождя закрыли несколько дорог.",
+   "why": "Дождь в английском не «сильный», а «тяжёлый»."
+  },
+  {
+   "slug": "03-make-a-mistake",
+   "hook": "сделать ошибку",
+   "bad": "do a mistake",
+   "good": "make a mistake",
+   "ru": "ошибиться, сделать ошибку",
+   "ex": "Tom made a small mistake in his English test.",
+   "exru": "Том сделал небольшую ошибку в тесте по английскому.",
+   "why": "С mistake дружит глагол make, а не do."
+  }
+ ]
+}

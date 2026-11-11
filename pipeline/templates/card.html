@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="FONTS_CSS" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1080px;height:1350px;background:#F4EDDC;color:#1E1A16;font-family:Nunito,sans-serif;padding:84px 80px 70px;display:flex;flex-direction:column}
+.kick{font-style:italic;font-size:34px;color:#6E6458;margin-bottom:22px}
+h1{font-family:Rubik;font-weight:800;font-size:64px;line-height:1.05;margin-bottom:46px}
+.lab{font-family:Rubik;font-weight:800;font-size:30px;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.bad{border:4px solid #1E1A16;border-radius:8px;background:#FFF9EE;padding:30px 36px;transform:rotate(-.6deg);margin-bottom:34px}
+.bad .w{font-family:Rubik;font-weight:800;font-size:72px;color:#9B8F80;text-decoration:line-through;text-decoration-color:#D9452B;text-decoration-thickness:8px}
+.x{width:44px;height:44px;border-radius:50%;background:#D9452B;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:30px}
+.ok{width:44px;height:44px;border-radius:50%;background:#2F7D4F;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:28px}
+.good{position:relative;overflow:hidden;border:4px solid #1E1A16;border-radius:8px;background:{{col}};padding:34px 36px;transform:rotate(.5deg);margin-bottom:34px}
+.good:after{content:"";position:absolute;right:0;top:0;bottom:0;width:110px;background:{{waves}};border-left:4px solid #1E1A16}
+.good .w{font-family:Rubik;font-weight:800;font-size:{{gsize}}px;line-height:1;margin:6px 0 14px;max-width:780px}
+.good .ru{font-size:34px;font-weight:700}
+.ex{border:3px solid #1E1A16;border-radius:8px;background:#FFF9EE;padding:26px 34px}
+.ex .t{font-style:italic;font-size:28px;color:#6E6458;margin-bottom:8px}
+.ex .en{font-size:34px;font-weight:700;line-height:1.3;margin-bottom:8px}
+.ex .r{font-size:28px;color:#6E6458;line-height:1.3}
+.why{font-size:30px;font-weight:600;margin-top:28px}
+.foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'M PLUS Rounded 1c';font-weight:900;font-size:76px;letter-spacing:-1px;line-height:1}
+.logo span:nth-child(1){color:#EE8A52}.logo span:nth-child(2){color:#F2B53A}.logo span:nth-child(3){color:#C77DD8}.logo span:nth-child(4){color:#4FB3A9}
+.cta{text-align:right;font-size:28px;font-weight:800;line-height:1.3}
+.cta i{font-weight:400;color:#6E6458;font-size:26px}
+</style></head><body>
+<div class="kick">Ошибка, которую слышно сразу</div>
+<h1>Как сказать<br>«{{hook}}»?</h1>
+<div class="bad"><div class="lab"><span class="x">✕</span>Не говорите</div><div class="w">{{bad}}</div></div>
+<div class="good"><div class="lab"><span class="ok">✓</span>Говорите</div><div class="w">{{good}}</div><div class="ru">{{ru}}</div></div>
+<div class="ex"><div class="t">Пример</div><div class="en">{{ex}}</div><div class="r">{{exru}}</div></div>
+<div class="why">{{why}}</div>
+<div class="foot"><div class="logo"><span>K</span><span>u</span><span>m</span><span>i</span></div><div class="cta">326 живых фраз в приложении<br><i>первые 30 бесплатно · ссылка в профиле</i></div></div>
+</body></html>
