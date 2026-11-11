@@ -40,7 +40,7 @@
   "status_threads": "failed",
   "error_threads": "<urlopen error Tunnel connection failed: 403 Forbidden>",
   "status_instagram": "failed",
-  "error_instagram": "HTTP Error 401: Unauthorized"
+  "error_instagram": "HTTP 401: {\"error\":{\"message\":\"Invalid OAuth access token - Cannot parse access token\",\"type\":\"OAuthException\",\"code\":190,\"fbtrace_id\":\"A1u7W8S7ZwSrj9tzwrdAqcO\"}}"
  },
  {
   "slug": "w46-02-heavy-rain",
