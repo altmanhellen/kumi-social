@@ -17,7 +17,10 @@ Usage: python3 publish.py queue.json [--dry]
 Only posts with approved==true and publish_at <= now are published. Nothing else is touched.
 """
 import json, os, sys, time, urllib.request, urllib.parse, urllib.error, datetime
-IG = 'https://graph.instagram.com/v21.0'
+# Instagram goes through the Facebook Graph API: the IG Business account is linked to the Facebook Page,
+# and the graph.facebook.com network secret (page token) already works for the Page posts.
+IG_USER_ID = '17841412983905507'  # @kumi.english.app
+IG = 'https://graph.facebook.com/v27.0'
 TH = 'https://graph.threads.net/v1.0'
 FB_PAGE_ID = '1471238842734444'  # Facebook Page "Kumi English App"
 FB_PHOTOS = f'https://graph.facebook.com/v27.0/{FB_PAGE_ID}/photos'
@@ -37,16 +40,16 @@ def call(url, params, method='POST'):
 
 def wait_ready(base, cid, token, field='status_code'):
     for _ in range(30):
-        s = call(f'{base}/{cid}', {'fields': field, 'access_token': token}, 'GET')
+        s = call(f'{base}/{cid}', {'fields': field, 'access_token': token} if token else {'fields': field}, 'GET')
         if s.get(field) in ('FINISHED', None): return
         if s.get(field) == 'ERROR': raise RuntimeError(f'container {cid} error')
         time.sleep(5)
 
 def post_instagram(img_url, caption):
-    t = os.environ.get('IG_TOKEN', '')
-    c = call(f'{IG}/me/media', {'image_url': img_url, 'caption': caption, 'access_token': t})
-    wait_ready(IG, c['id'], t)
-    return call(f'{IG}/me/media_publish', {'creation_id': c['id'], 'access_token': t})['id']
+    # No access_token: the graph.facebook.com network secret adds the Authorization header.
+    c = call(f'{IG}/{IG_USER_ID}/media', {'image_url': img_url, 'caption': caption})
+    wait_ready(IG, c['id'], None)
+    return call(f'{IG}/{IG_USER_ID}/media_publish', {'creation_id': c['id']})['id']
 
 def post_threads(img_url, text):
     t = os.environ.get('THREADS_TOKEN', '')
