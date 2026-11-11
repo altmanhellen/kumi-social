@@ -1,0 +1,90 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts.css">
+<style>
+*{box-sizing:border-box;margin:0}
+:root{--ink:#1E1A16;--cream:#FFF9EE;--green:#3F8A57;--red:#DD5440}
+body{width:1080px;height:1920px;overflow:hidden;background:var(--bg);font-family:Nunito,sans-serif;color:var(--ink);position:relative}
+#bg{position:absolute;inset:-200px;background-image:var(--lattice)}
+.abs{position:absolute;will-change:transform,opacity}
+.pill{left:60px;top:200px;background:var(--cream);border:5px solid var(--ink);border-radius:70px;padding:14px 34px 14px 20px;display:flex;align-items:center;gap:14px;font-family:Rubik;font-weight:800;font-size:54px}
+.pill img{width:90px;height:80px}
+.tag{right:56px;top:214px;background:#CDB8F7;border:5px solid var(--ink);border-radius:36px;padding:16px 34px;font-size:40px;font-weight:700;transform:rotate(2deg)}
+#hook{left:0;right:0;top:430px;text-align:center}
+#hook .k{font-family:Caveat;font-weight:700;font-size:84px;line-height:1}
+#hook .h{font-family:Rubik;font-weight:800;font-size:86px;line-height:1.05;margin-top:6px}
+.card{background:var(--cream);border:6px solid var(--ink);border-radius:56px}
+#card{left:80px;width:920px;top:760px;height:680px;padding:200px 70px 0}
+#card .l1,#card .l2{font-family:Rubik;font-weight:800;font-size:168px;line-height:1;white-space:nowrap}
+#card .l2{margin-top:14px}
+#bad{color:var(--red);position:relative;display:inline-block}
+#strike{position:absolute;left:-14px;top:50%;height:16px;background:#B83A2A;border-radius:8px;transform:rotate(-3deg)}
+#good{position:absolute;font-family:Caveat;font-weight:700;color:var(--green);font-size:190px;line-height:1;left:200px;top:40px;transform:rotate(-8deg);white-space:nowrap}
+#ru{position:absolute;left:84px;bottom:64px;font-size:50px;font-weight:700;color:#4A3A2E;transform:rotate(-2deg)}
+#ex{left:70px;width:940px;top:1180px;padding:44px 56px 50px}
+#ex .t{font-family:Caveat;font-weight:700;font-size:64px;color:#6E6458;line-height:1}
+#ex .en{font-size:62px;font-weight:800;line-height:1.25;margin:14px 0 18px}
+#ex .hl{background:linear-gradient(#9FD3CF,#9FD3CF) no-repeat 0 85%/var(--hlw,0%) 42%;padding:0 4px}
+#ex .r{font-size:44px;color:#6E6458;line-height:1.3;font-weight:600}
+#end{left:80px;width:920px;top:560px;padding:80px 70px 90px;text-align:center}
+#end .logo{font-family:'M PLUS Rounded 1c';font-weight:900;font-size:230px;letter-spacing:-12px;line-height:1}
+#end .logo span:nth-child(1){color:#FD7E34}#end .logo span:nth-child(2){color:#2E5EFC}#end .logo span:nth-child(3){color:#10CBDD}#end .logo span:nth-child(4){color:#C159FB}
+#end .n{font-family:Rubik;font-weight:800;font-size:84px;line-height:1.08;margin-top:40px}
+#end .c{font-family:Caveat;font-weight:700;font-size:70px;color:#4A3A2E;margin-top:34px;line-height:1.1}
+#end .f{font-size:44px;font-weight:700;margin-top:30px;color:#6E6458}
+</style></head><body>
+<div id="bg"></div>
+<div class="abs pill" id="pill"><img src="kumi-icon.png">Kumi</div>
+<div class="abs tag" id="tag">{{tag}}</div>
+<div class="abs" id="hook"><div class="k">Как сказать</div><div class="h">«{{hook}}»?</div></div>
+<div class="abs card" id="card">
+  <div class="l1">{{pre}} <span id="bad">{{bad}}<span id="strike"></span></span></div>
+  <div class="l2">{{post}}</div>
+  <div id="good">{{good}}</div>
+  <div id="ru">{{ru}}</div>
+</div>
+<div class="abs card" id="ex"><div class="t">Пример</div><div class="en">{{ex_html}}</div><div class="r">{{exru}}</div></div>
+<div class="abs card" id="end"><div class="logo"><span>K</span><span>u</span><span>m</span><span>i</span></div>
+<div class="n">{{end_title}}</div><div class="c">{{end_note}}</div><div class="f">{{end_cta}}</div></div>
+<script>
+const T = {{timeline}};
+const $ = id => document.getElementById(id);
+const cl = x => Math.max(0, Math.min(1, x));
+const p = (t, a, d) => cl((t - a) / d);
+const out = x => 1 - Math.pow(1 - x, 3);
+const back = x => { const c = 1.70158; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+function set(el, o, tr) { el.style.opacity = o; el.style.transform = tr; }
+window.render = function (t) {
+  $('bg').style.transform = `translate(${-t * 6}px,${-t * 9}px)`;
+  const endIn = p(t, T.end, 0.5), endOut = out(endIn);
+  // header
+  const pi = back(p(t, 0.05, 0.45));
+  set($('pill'), pi, `translateY(${(1 - pi) * -60}px)`);
+  const ti = back(p(t, 0.2, 0.45));
+  set($('tag'), ti, `rotate(2deg) scale(${0.6 + 0.4 * ti})`);
+  // hook
+  const hi = back(p(t, T.hook, 0.5)), ho = out(p(t, T.example - 0.1, 0.45));
+  set($('hook'), Math.min(cl(hi * 1.5), 1 - ho), `translateY(${(1 - hi) * 40 - ho * 120}px) scale(${0.85 + 0.15 * hi})`);
+  // card
+  const ci = back(p(t, T.card, 0.55)), cu = out(p(t, T.example, 0.6));
+  set($('card'), Math.min(cl(ci * 2), 1 - endOut), `translateY(${(1 - ci) * 900 - cu * 330 + endOut * -200}px) rotate(${-3 + cu * 1}deg) scale(${1 - cu * 0.12})`);
+  // strike
+  const s = out(p(t, T.strike, 0.35));
+  $('strike').style.width = `calc(${s * 100}% + ${s * 28}px)`;
+  $('bad').style.opacity = 1 - 0.35 * s;
+  // good (handwritten reveal)
+  const g = p(t, T.good, 0.6);
+  $('good').style.clipPath = `inset(-30% ${(1 - g) * 100}% -30% 0)`;
+  $('good').style.transform = `rotate(-8deg) scale(${1 + 0.08 * Math.sin(Math.PI * cl(g))})`;
+  const r = out(p(t, T.ru, 0.4));
+  set($('ru'), r, `rotate(-2deg) translateY(${(1 - r) * 20}px)`);
+  // example
+  const ei = back(p(t, T.example + 0.15, 0.55));
+  set($('ex'), Math.min(cl(ei * 2), 1 - endOut), `translateY(${(1 - ei) * 700 + endOut * 300}px) rotate(1.5deg)`);
+  document.body.style.setProperty('--hlw', (out(p(t, T.hl, T.hlDur)) * 100) + '%');
+  // end
+  const ee = back(p(t, T.end + 0.2, 0.6));
+  set($('end'), cl(ee * 2), `translateY(${(1 - ee) * 600}px) rotate(${-2 + 0 * ee}deg) scale(${0.9 + 0.1 * ee})`);
+};
+window.render(0);
+</script>
+</body></html>
