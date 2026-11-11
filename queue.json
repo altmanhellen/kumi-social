@@ -30,7 +30,7 @@
   "slug": "w46-01-made-mistake",
   "image": "weeks/2026-W46-final/01-made-mistake.png",
   "caption": "Можно сделать ошибку дважды. Второй раз — когда рассказываешь о ней на английском. 🙃\n\n❌ I did a mistake.\n✅ I made a mistake.\n\nВ английском ошибки не do. Их make.\n\nI made a mistake. I sent the message to the wrong person.\n\nЗнакомая ситуация? Надеемся, хотя бы не в рабочем чате.\n\nАнглийский — это не только знание слов. Это умение правильно соединять их между собой.\n\nВ Kumi собрали 326 таких сочетаний для разных уровней. Первые 30 фраз — бесплатно.\n\n📌 Сохраните. Ошибки можно не повторять. Даже грамматические.\n\n#английский #учиманглийский #коллокации #englishcollocations #английскийдлявзрослых",
-  "threads_text": "Можно сделать ошибку дважды. Второй раз — когда рассказываешь о ней на английском. 🙃\n\n❌ I did a mistake.\n✅ I made a mistake.\n\nВ английском ошибки не do. Их make.\n\nI made a mistake. I sent the message to the wrong person.\n\nЗнакомая ситуация? Надеемся, хотя бы не в рабочем чате.\n\nАнглийский — это не только знание слов. Это умение правильно соединять их между собой.\n\nВ Kumi собрали 326 таких сочетаний для разных уровней. Первые 30 фраз — бесплатно.\n\n📌 Сохраните. Ошибки можно не повторять. Даже грамматические.",
+  "threads_text": "Можно сделать ошибку дважды. Второй раз — когда рассказываешь о ней на английском. 🙃\n\n❌ I did a mistake.\n✅ I made a mistake.\n\nВ английском ошибки не do. Их make.\n\nI made a mistake. I sent the message to the wrong person.\n\nЗнакомая ситуация? Надеемся, хотя бы не в рабочем чате.\n\nВ Kumi 326 таких сочетаний. Первые 30 фраз — бесплатно.\n\n📌 Сохраните. Ошибки можно не повторять.",
   "publish_at": "2026-11-11T17:00:00+00:00",
   "approved": true,
   "status": "partial",
@@ -38,7 +38,7 @@
   "facebook_post_id": "1471238842734444_122104638633541189",
   "status_facebook": "published",
   "status_threads": "failed",
-  "error_threads": "HTTP 500: {\"error\":{\"message\":\"Param text must be at most 500 characters long.\",\"type\":\"THApiException\",\"code\":100,\"fbtrace_id\":\"A_uwAVQqu3S83X4YaO5tKSA\"}}",
+  "error_threads": "<urlopen error Tunnel connection failed: 403 Forbidden>",
   "status_instagram": "failed",
   "error_instagram": "HTTP Error 401: Unauthorized"
  },
@@ -46,7 +46,7 @@
   "slug": "w46-02-heavy-rain",
   "image": "weeks/2026-W46-final/02-heavy-rain.png",
   "caption": "В английском у дождя есть вес. ☔\n\nСерьёзно.\n\nПо-русски дождь сильный. По-английски — тяжёлый.\n\n❌ strong rain\n✅ heavy rain\n\nWe got caught in heavy rain on our way home.\n\nА вот ветер в английском как раз strong.\n\n🌧️ heavy rain\n💨 strong wind\n\nДва погодных явления. Два разных прилагательных. Никакой очевидной логики для тех, кто переводит дословно.\n\nА теперь проверим интуицию.\n\nКак думаете, «крепкий кофе» — strong coffee или heavy coffee? ☕\n\nПишите свой вариант в комментариях.\n\nТакие естественные сочетания слов мы и учим в Kumi. Ссылка в профиле.\n\n#английский #englishcollocations #учиманглийский #разговорныйанглийский #коллокации",
-  "threads_text": "В английском у дождя есть вес. ☔\n\nСерьёзно.\n\nПо-русски дождь сильный. По-английски — тяжёлый.\n\n❌ strong rain\n✅ heavy rain\n\nWe got caught in heavy rain on our way home.\n\nА вот ветер в английском как раз strong.\n\n🌧️ heavy rain\n💨 strong wind\n\nДва погодных явления. Два разных прилагательных. Никакой очевидной логики для тех, кто переводит дословно.\n\nА теперь проверим интуицию.\n\nКак думаете, «крепкий кофе» — strong coffee или heavy coffee? ☕\n\nПишите свой вариант в комментариях.\n\nТакие естественные сочетания слов мы и учим в Kumi. Ссылка в профиле.",
+  "threads_text": "В английском у дождя есть вес. ☔\n\nПо-русски дождь сильный. По-английски — тяжёлый.\n\n❌ strong rain\n✅ heavy rain\n\nWe got caught in heavy rain on our way home.\n\nА вот ветер в английском как раз strong: strong wind.\n\nКак думаете, «крепкий кофе» — strong coffee или heavy coffee? ☕\n\nПишите свой вариант в комментариях.\n\nТакие сочетания мы и учим в Kumi. Ссылка в профиле.",
   "publish_at": "2026-11-12T17:00:00+00:00",
   "approved": true,
   "status": "pending"
@@ -55,7 +55,7 @@
   "slug": "w46-03-make-decision",
   "image": "weeks/2026-W46-final/03-make-decision.png",
   "caption": "Одна из самых частых ловушек на собеседованиях и созвонах — сказать «I accepted a decision», когда вы хотели показать, что сами приняли решение.\n\nСюрприз: вы только что сказали, что согласились с решением, которое приняли без вас.\n\n✅ Make a decision — самому принять решение, выбрать.\n✅ Accept a decision — согласиться с уже принятым решением (чаще всего чужим) и не спорить с ним.\n\n💬 He made a decision to change his job.\n(Он решил сменить работу)\n💬 We accepted the decision to cancel the project.\n(Мы приняли решение закрыть проект: его приняли без нас, и мы с ним согласились)\n\nВ первом случае вы сами выбираете, куда двигаться. Во втором решение уже есть, и вы его признаёте. Это тоже нормально, но к «я принял решение» отношения не имеет. 🙃\n\nP.S. В английском есть и другие способы сказать «принять решение»: take a decision (чаще в британском английском), reach a decision, come to a decision.\n\n#деловойанглийский #englishforwork #собеседованиенаанглийском #английскийb2 #полезныйанглийский #kumi",
-  "threads_text": "Одна из самых частых ловушек на собеседованиях и созвонах — сказать «I accepted a decision», когда вы хотели показать, что сами приняли решение.\n\nСюрприз: вы только что сказали, что согласились с решением, которое приняли без вас.\n\n✅ Make a decision — самому принять решение, выбрать.\n✅ Accept a decision — согласиться с уже принятым решением (чаще всего чужим) и не спорить с ним.\n\n💬 He made a decision to change his job.\n(Он решил сменить работу)\n💬 We accepted the decision to cancel the project.\n(Мы приняли решение закрыть проект: его приняли без нас, и мы с ним согласились)\n\nВ первом случае вы сами выбираете, куда двигаться. Во втором решение уже есть, и вы его признаёте. Это тоже нормально, но к «я принял решение» отношения не имеет. 🙃\n\nP.S. В английском есть и другие способы сказать «принять решение»: take a decision (чаще в британском английском), reach a decision, come to a decision.",
+  "threads_text": "Частая ловушка на собеседованиях — сказать «I accepted a decision», когда хотели сказать, что сами приняли решение.\n\n✅ Make a decision — самому принять решение.\n✅ Accept a decision — согласиться с уже принятым решением, чаще всего чужим.\n\n💬 He made a decision to change his job. (Он решил сменить работу)\n💬 We accepted the decision to cancel the project. (Мы согласились с решением закрыть проект)\n\nДругие варианты: take a decision (чаще в британском английском), reach a decision, come to a decision",
   "publish_at": "2026-11-13T17:00:00+00:00",
   "approved": true,
   "status": "pending"
