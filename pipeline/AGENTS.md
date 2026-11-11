@@ -17,6 +17,7 @@ Only Elena's own message saying Ок (or listing which posts are OK) sets approv
 
 ## Publisher (daily 16:05 UTC)
 git pull; python3 pipeline/publish.py queue.json; commit queue.json; report failures in the thread.
+Posts go to Instagram, Threads and the Facebook Page "Kumi English App" (id 1471238842734444). Facebook results live in facebook_status / facebook_post_id / facebook_error, separate from Instagram/Threads; an entry with facebook_post_id is never re-posted. Check with --dry first.
 
 ## Analyst (Monday)
 Pull IG/Threads insights for last week's posts (reach, saves, shares) + App Store Connect campaign numbers if Elena shares them; one short note on what to make more of.
