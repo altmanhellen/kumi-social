@@ -1,25 +1,39 @@
 """Publish approved posts whose time has come.
 Auth: tokens are injected by the environment's network secrets as 'Authorization: Bearer ...'
-     for graph.instagram.com, graph.threads.net and graph.facebook.com (no tokens in code or env). Env: MEDIA_BASE (public base URL of the images, e.g. raw GitHub URL).
+     for graph.instagram.com, graph.threads.net and graph.facebook.com (no tokens in code or env).
+Env: MEDIA_BASE (public base URL of the images, e.g. raw GitHub URL).
+     ONLY  optional comma list of platforms to handle in this run (instagram,threads,facebook).
+     SLUGS optional comma list of post slugs to handle in this run.
 queue.json: list of posts with fields slug, image (file name), caption, threads_text, publish_at (ISO UTC),
-            approved (bool, set only after Elena's OK), status ('pending'|'published'|'failed'), ids.
-            Facebook Page results are kept apart: facebook_status ('published'|'failed'),
-            facebook_post_id or facebook_error. A post with facebook_post_id is never sent to Facebook again.
+            approved (bool, set only after Elena's OK), status, ids.
+Each platform is handled on its own:
+  status_instagram / status_threads / status_facebook  ('published' | 'failed')
+  error_instagram  / error_threads  / error_facebook   (last error, removed after success)
+  ids.instagram, ids.threads, facebook_post_id         (post ids)
+A failure on one platform is recorded and does not stop the others or the script.
+A platform that already has an id is never posted again.
+status (overall): 'published' when all platforms have an id, 'partial' when some do, 'failed' when none.
 Usage: python3 publish.py queue.json [--dry]
 Only posts with approved==true and publish_at <= now are published. Nothing else is touched.
 """
-import json, os, sys, time, urllib.request, urllib.parse, datetime
+import json, os, sys, time, urllib.request, urllib.parse, urllib.error, datetime
 IG = 'https://graph.instagram.com/v21.0'
 TH = 'https://graph.threads.net/v1.0'
 FB_PAGE_ID = '1471238842734444'  # Facebook Page "Kumi English App"
 FB_PHOTOS = f'https://graph.facebook.com/v27.0/{FB_PAGE_ID}/photos'
+PLATFORMS = ('instagram', 'threads', 'facebook')
+THREADS_MAX = 500  # Threads API rejects longer text (code 100)
 
 def call(url, params, method='POST'):
     params = {k: v for k, v in params.items() if not (k == 'access_token' and not v)}
     data = urllib.parse.urlencode(params).encode()
     req = urllib.request.Request(url if method == 'POST' else url + '?' + data.decode(), data=data if method == 'POST' else None, method=method)
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return json.load(r)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode('utf-8', 'replace')[:400]
+        raise RuntimeError(f'HTTP {e.code}: {body}') from None
 
 def wait_ready(base, cid, token, field='status_code'):
     for _ in range(30):
@@ -45,45 +59,71 @@ def post_facebook(img_url, caption):
     r = call(FB_PHOTOS, {'url': img_url, 'message': caption})
     return r.get('post_id') or r['id']
 
+def get_id(p, plat):
+    if plat == 'facebook': return p.get('facebook_post_id')
+    return p.get('ids', {}).get(plat)
+
+def set_id(p, plat, pid):
+    if plat == 'facebook': p['facebook_post_id'] = pid
+    else: p.setdefault('ids', {})[plat] = pid
+
+def migrate(p):
+    # Older entries kept Facebook as facebook_status/facebook_error.
+    if 'facebook_status' in p: p.setdefault('status_facebook', p.pop('facebook_status'))
+    if 'facebook_error' in p: p.setdefault('error_facebook', p.pop('facebook_error'))
+
+def overall(p):
+    done = sum(1 for x in PLATFORMS if get_id(p, x))
+    return 'published' if done == len(PLATFORMS) else ('partial' if done else 'failed')
+
+def send(plat, p, url):
+    if plat == 'instagram': return post_instagram(url, p['caption'])
+    if plat == 'threads':
+        if len(p['threads_text']) > THREADS_MAX:
+            raise RuntimeError(f"threads_text is {len(p['threads_text'])} characters, Threads allows {THREADS_MAX}; not sent")
+        return post_threads(url, p['threads_text'])
+    return post_facebook(url, p['caption'])
+
+def describe(plat, url):
+    if plat == 'instagram': return f'POST {IG}/me/media fields=image_url,caption image_url={url} -> POST {IG}/me/media_publish'
+    if plat == 'threads': return f'POST {TH}/me/threads fields=media_type,image_url,text image_url={url} -> POST {TH}/me/threads_publish'
+    return f'POST {FB_PHOTOS} fields=url,message url={url}'
+
 def main(qpath, dry=False):
     q = json.load(open(qpath)); now = datetime.datetime.now(datetime.timezone.utc)
     base = os.environ.get('MEDIA_BASE', '').rstrip('/')
+    only = [x.strip() for x in os.environ.get('ONLY', '').split(',') if x.strip()] or list(PLATFORMS)
+    slugs = {x.strip() for x in os.environ.get('SLUGS', '').split(',') if x.strip()}
+    for x in only:
+        if x not in PLATFORMS: sys.exit(f'unknown platform in ONLY: {x}')
     for p in q:
+        if slugs and p['slug'] not in slugs: continue
         if not p.get('approved'):
             if dry: print('skip (not approved)', p['slug'])
             continue
         if datetime.datetime.fromisoformat(p['publish_at']) > now:
             if dry: print('skip (not due yet)', p['slug'], p['publish_at'])
             continue
-        need_main = p.get('status') != 'published'
-        need_fb = 'facebook_post_id' not in p
-        if not need_main and not need_fb: continue
+        todo = [x for x in only if not get_id(p, x)]
+        if not todo: continue
         url = f"{base}/{p['image']}"
         if dry:
-            ids = p.get('ids', {})
             print('would publish', p['slug'], url)
-            if need_main:
-                if 'instagram' not in ids: print(f'  instagram: POST {IG}/me/media fields=image_url,caption image_url={url} -> POST {IG}/me/media_publish')
-                if 'threads' not in ids: print(f'  threads:   POST {TH}/me/threads fields=media_type,image_url,text image_url={url} -> POST {TH}/me/threads_publish')
-            if need_fb: print(f'  facebook:  POST {FB_PHOTOS} fields=url,message url={url}')
+            for x in todo: print(f'  {x}: {describe(x, url)}')
+            if 'threads' in todo and len(p['threads_text']) > THREADS_MAX:
+                print(f"  WARNING threads_text is {len(p['threads_text'])} characters (max {THREADS_MAX}), Threads will be skipped as failed")
             continue
-        if need_main:
-            ids = p.setdefault('ids', {})
+        migrate(p)
+        for x in todo:
             try:
-                if 'instagram' not in ids: ids['instagram'] = post_instagram(url, p['caption'])
-                if 'threads' not in ids: ids['threads'] = post_threads(url, p['threads_text'])
-                p['status'] = 'published'; p['published_at'] = now.isoformat()
+                set_id(p, x, send(x, p, url))
+                p[f'status_{x}'] = 'published'; p.pop(f'error_{x}', None)
             except Exception as e:
-                p['status'] = 'failed'; p['error'] = str(e)[:500]
+                p[f'status_{x}'] = 'failed'; p[f'error_{x}'] = str(e)[:500]
+            p['status'] = overall(p)
+            if p['status'] == 'published': p.setdefault('published_at', now.isoformat())
             json.dump(q, open(qpath, 'w'), ensure_ascii=False, indent=1)
-        if need_fb:
-            try:
-                p['facebook_post_id'] = post_facebook(url, p['caption'])
-                p['facebook_status'] = 'published'; p.pop('facebook_error', None)
-            except Exception as e:
-                p['facebook_status'] = 'failed'; p['facebook_error'] = str(e)[:500]
-            json.dump(q, open(qpath, 'w'), ensure_ascii=False, indent=1)
-        print(p['slug'], p.get('status'), p.get('ids', {}), 'facebook:', p.get('facebook_status'), p.get('facebook_post_id', ''))
+            print(p['slug'], x, p[f'status_{x}'], get_id(p, x) or p.get(f'error_{x}', ''))
 
 if __name__ == '__main__':
     main(sys.argv[1], '--dry' in sys.argv)
