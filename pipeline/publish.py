@@ -55,7 +55,11 @@ def page_token():
     if _PAGE_TOKEN is None:
         try:
             r = call(f'https://graph.facebook.com/v27.0/{FB_PAGE_ID}', {'fields': 'access_token'}, 'GET')
-            _PAGE_TOKEN = r.get('access_token') or ''
+            t = r.get('access_token') or ''
+            # Check the token before using it: an explicit access_token overrides the header, so a bad one would break every call.
+            if t:
+                call(f'https://graph.facebook.com/v27.0/{FB_PAGE_ID}', {'fields': 'id', 'access_token': t}, 'GET')
+            _PAGE_TOKEN = t
         except Exception as e:
             print(f'  page token not fetched, using header auth only: {str(e)[:120]}')
             _PAGE_TOKEN = ''
