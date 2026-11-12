@@ -45,11 +45,32 @@ def wait_ready(base, cid, token, field='status_code'):
         if s.get(field) == 'ERROR': raise RuntimeError(f'container {cid} error')
         time.sleep(5)
 
+_PAGE_TOKEN = None
+def page_token():
+    """Page access token for the Kumi page, fetched at runtime with the graph.facebook.com secret.
+    Works with a system-user token (or a page token that can read its own access_token).
+    Returns None if it cannot be fetched; callers then rely on the Authorization header alone
+    (the behaviour that already works today), so nothing breaks."""
+    global _PAGE_TOKEN
+    if _PAGE_TOKEN is None:
+        try:
+            r = call(f'https://graph.facebook.com/v27.0/{FB_PAGE_ID}', {'fields': 'access_token'}, 'GET')
+            _PAGE_TOKEN = r.get('access_token') or ''
+        except Exception as e:
+            print(f'  page token not fetched, using header auth only: {str(e)[:120]}')
+            _PAGE_TOKEN = ''
+    return _PAGE_TOKEN or None
+
+def with_token(params):
+    t = page_token()
+    if t: params = dict(params, access_token=t)
+    return params
+
 def post_instagram(img_url, caption):
-    # No access_token: the graph.facebook.com network secret adds the Authorization header.
-    c = call(f'{IG}/{IG_USER_ID}/media', {'image_url': img_url, 'caption': caption})
-    wait_ready(IG, c['id'], None)
-    return call(f'{IG}/{IG_USER_ID}/media_publish', {'creation_id': c['id']})['id']
+    # Instagram Business account linked to the Page; graph.facebook.com with the page token.
+    c = call(f'{IG}/{IG_USER_ID}/media', with_token({'image_url': img_url, 'caption': caption}))
+    wait_ready(IG, c['id'], page_token())
+    return call(f'{IG}/{IG_USER_ID}/media_publish', with_token({'creation_id': c['id']}))['id']
 
 def post_threads(img_url, text):
     t = os.environ.get('THREADS_TOKEN', '')
@@ -58,8 +79,7 @@ def post_threads(img_url, text):
     return call(f'{TH}/me/threads_publish', {'creation_id': c['id'], 'access_token': t})['id']
 
 def post_facebook(img_url, caption):
-    # No access_token: the network secret for graph.facebook.com adds the Authorization header.
-    r = call(FB_PHOTOS, {'url': img_url, 'message': caption})
+    r = call(FB_PHOTOS, with_token({'url': img_url, 'message': caption}))
     return r.get('post_id') or r['id']
 
 def get_id(p, plat):
@@ -88,7 +108,7 @@ def send(plat, p, url):
     return post_facebook(url, p['caption'])
 
 def describe(plat, url):
-    if plat == 'instagram': return f'POST {IG}/me/media fields=image_url,caption image_url={url} -> POST {IG}/me/media_publish'
+    if plat == 'instagram': return f'POST {IG}/{IG_USER_ID}/media fields=image_url,caption image_url={url} -> POST {IG}/{IG_USER_ID}/media_publish'
     if plat == 'threads': return f'POST {TH}/me/threads fields=media_type,image_url,text image_url={url} -> POST {TH}/me/threads_publish'
     return f'POST {FB_PHOTOS} fields=url,message url={url}'
 
