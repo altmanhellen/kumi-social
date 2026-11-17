@@ -1,23 +1,32 @@
-# Kumi social agents
+# Kumi social agents (updated 2026-11-17)
 
-Repo layout (public GitHub repo kumi-social):
-- pipeline/ — render.py, shot.js, publish.py, refresh_tokens.py, templates/card.html
-- weeks/<YYYY-Www>/week.json + rendered PNGs
+Repo layout (public GitHub repo kumi-social, working branch claude/project-thread-0ts6vo):
+- pipeline/ — svgcards.py (SVG cards, current style), svg2png.js, publish.py; render.py/card.html = old W46-start style, not used
+- weeks/<YYYY-Www>/week.json + <slug>.svg (source, editable) + <slug>.png (what is published)
 - queue.json — every post ever scheduled, with approved/status/ids
-- used.json — phrase ids already posted (never repeat within 6 months)
+- used.json — phrase ids already posted or drafted (never repeat within 6 months)
 
-## Editor + designer (weekly, Sunday 07:00 UTC)
-1. Read /mnt/project-files/content/word-partners-content.json and used.json. Pick 5 B1–B2 items that have a common Russian-calque mistake (do/make, strong/heavy, etc.). Only phrases, translations and examples from the base; never invent examples.
-2. For each write: hook (Russian phrase, lower case), bad (the typical wrong English calque), why (one sentence, ≤ 70 chars), caption (Instagram, format of /mnt/project-files/smm/posts/captions.md, «для тех, кто говорит по-русски», exact number 326, CTA in ≤ 1 of 3 posts strong), threads_text (same, no hashtags or one). No politics, no country comparisons.
-3. publish_at: Mon/Tue/Wed/Thu/Sat 16:00 UTC (≈19:00 Israel). Render with render.py, commit week folder, append to queue.json with approved=false.
-4. Post a preview (contact sheet PNG + captions) to Elena in the project thread and ask for «Ок».
+## Weekly batch (scheduled task, Sunday ~09:45 Israel)
+1. Read /mnt/project-files/content/word-partners-content.json and used.json. Pick 5 posts for Wed/Thu/Sat/Mon/Tue,
+   mixing rubrics from the Notion schema: «Как сказать…?», «Ловушка», «Квиз», «Подборка» (+ «Знакомство с Kumi» now and then).
+   Prefer items with a typical Russian-calque mistake. Only phrases, translations and example sentences from the base.
+2. Captions in Elena's voice (see W46 texts in queue.json): short lines, ❌/✅, one example + Russian translation,
+   question or «Сохраните», 5 hashtags. «Kumi»/326/«первые 30 бесплатно» in at most 2 of 5. threads_text ≤ 500 chars, no hashtags.
+   No politics, no country comparisons, «для тех, кто говорит по-русски», never «для русских».
+3. week.json with layout + card per post (layouts: swap, versus, pair, quiz, list; vary them and the colours).
+   python3 pipeline/svgcards.py weeks/<w>/week.json && node pipeline/svg2png.js weeks/<w>; look at every PNG, fix overflow.
+4. Append to queue.json with approved=false, status=draft. Commit + push.
+5. Copy SVG+PNG+captions to /mnt/project-files/smm/<week>/ and show Elena a contact sheet + texts in the project thread; ask for «Ок».
 
 ## Approval
-Only Elena's own message saying Ок (or listing which posts are OK) sets approved=true. Edits she asks for are applied and re-shown. Never publish an unapproved post.
+Only Elena's own message saying Ок (or listing which posts are OK / edits) counts. Apply edits and re-show.
+On approval: approved=true in queue.json; add a row per post to Notion «Контент для соцсетей (одобренное)»
+(collection://16262d91-f3b5-4dd0-aa04-d98efe4bbd95): Статус «Всё одобрено», both checkboxes, Дата одобрения, Рубрика, Уровень,
+Фраза, Площадки, Порядок, caption + image (raw GitHub URL) + SVG link in the body. Then schedule one one-shot publish per post.
 
-## Publisher (daily 16:05 UTC)
-git pull; python3 pipeline/publish.py queue.json; commit queue.json; report failures in the thread.
-Posts go to Instagram, Threads and the Facebook Page "Kumi English App" (id 1471238842734444). Facebook results live in facebook_status / facebook_post_id / facebook_error, separate from Instagram/Threads; an entry with facebook_post_id is never re-posted. Check with --dry first.
+## Publish (one-shot per approved post, at publish_at = 17:00 UTC ≈ 19:00 Israel)
+git pull; MEDIA_BASE=https://raw.githubusercontent.com/altmanhellen/kumi-social/<branch> SLUGS=<slug> python3 pipeline/publish.py queue.json;
+commit queue.json; set the Notion row to «Опубликовано» with date + link; report failures in the thread.
 
-## Analyst (Monday)
-Pull IG/Threads insights for last week's posts (reach, saves, shares) + App Store Connect campaign numbers if Elena shares them; one short note on what to make more of.
+## Analyst (with the weekly run)
+Threads insights (graph.threads.net) + IG insights when available; one short note on what to make more of.

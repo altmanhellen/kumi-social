@@ -1,1 +1,20 @@
-[]
+{
+ "posted": [
+  "a2.make-a-mistake",
+  "b1.heavy-rain",
+  "b1.strong-wind",
+  "a2.strong-coffee",
+  "b1.make-a-decision"
+ ],
+ "drafted": {
+  "a2.take-a-photo": "w47-01-take-a-photo",
+  "b1.take-an-exam": "w47-02-pass-take-exam",
+  "a2.pass-an-exam": "w47-02-pass-take-exam",
+  "a2.fail-a-test": "w47-02-pass-take-exam",
+  "b1.do-someone-a-favour": "w47-03-do-me-a-favour",
+  "b1.pay-attention": "w47-04-pay-attention",
+  "b2.fast-asleep": "w47-05-fast-asleep",
+  "b2.sleep-soundly": "w47-05-fast-asleep",
+  "b2.deep-sleep": "w47-05-fast-asleep"
+ }
+}
