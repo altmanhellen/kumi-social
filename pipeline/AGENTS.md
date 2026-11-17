@@ -20,7 +20,7 @@ Repo layout (public GitHub repo kumi-social, working branch claude/project-threa
 
 ## Approval
 Only Elena's own message saying Ок (or listing which posts are OK / edits) counts. Apply edits and re-show.
-On approval: approved=true in queue.json; add a row per post to Notion «Контент для соцсетей (одобренное)»
+Every draft goes to Notion «Kumi — контент для соцсетей» right away as «На проверке» (Elena rule 2026-11-17). On approval (chat «Ок» or Статус «Одобрено»): approved=true in queue.json; update the row in Notion
 (collection://16262d91-f3b5-4dd0-aa04-d98efe4bbd95): Статус «Всё одобрено», both checkboxes, Дата одобрения, Рубрика, Уровень,
 Фраза, Площадки, Порядок, caption + image (raw GitHub URL) + SVG link in the body. Then schedule one one-shot publish per post.
 
