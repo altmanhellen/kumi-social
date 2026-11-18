@@ -4,7 +4,8 @@ Auth: tokens are injected by the environment's network secrets as 'Authorization
 Env: MEDIA_BASE (public base URL of the images, e.g. raw GitHub URL).
      ONLY  optional comma list of platforms to handle in this run (instagram,threads,facebook).
      SLUGS optional comma list of post slugs to handle in this run.
-queue.json: list of posts with fields slug, image (file name), caption, threads_text, publish_at (ISO UTC),
+queue.json: list of posts with fields slug, image (file name), caption, threads_text, optional threads_reply
+            (text posted as a reply under the Threads post, e.g. a quiz answer; id in ids.threads_reply), publish_at (ISO UTC),
             approved (bool, set only after Elena's OK), status, ids.
 Each platform is handled on its own:
   status_instagram / status_threads / status_facebook  ('published' | 'failed')
@@ -82,6 +83,16 @@ def post_threads(img_url, text):
     wait_ready(TH, c['id'], t, 'status')
     return call(f'{TH}/me/threads_publish', {'creation_id': c['id'], 'access_token': t})['id']
 
+def post_threads_reply(parent_id, text):
+    # Text-only reply under our own Threads post (used e.g. for a quiz answer).
+    t = os.environ.get('THREADS_TOKEN', '')
+    c = call(f'{TH}/me/threads', {'media_type': 'TEXT', 'text': text, 'reply_to_id': parent_id, 'access_token': t})
+    wait_ready(TH, c['id'], t, 'status')
+    return call(f'{TH}/me/threads_publish', {'creation_id': c['id'], 'access_token': t})['id']
+
+def need_reply(p):
+    return bool(p.get('threads_reply')) and not p.get('ids', {}).get('threads_reply')
+
 def post_facebook(img_url, caption):
     r = call(FB_PHOTOS, with_token({'url': img_url, 'message': caption}))
     return r.get('post_id') or r['id']
@@ -132,13 +143,16 @@ def main(qpath, dry=False):
             if dry: print('skip (not due yet)', p['slug'], p['publish_at'])
             continue
         todo = [x for x in only if not get_id(p, x)]
-        if not todo: continue
+        reply_due = 'threads' in only and need_reply(p)
+        if not todo and not reply_due: continue
         url = f"{base}/{p['image']}"
         if dry:
             print('would publish', p['slug'], url)
             for x in todo: print(f'  {x}: {describe(x, url)}')
             if 'threads' in todo and len(p['threads_text']) > THREADS_MAX:
                 print(f"  WARNING threads_text is {len(p['threads_text'])} characters (max {THREADS_MAX}), Threads will be skipped as failed")
+            if reply_due:
+                print(f"  threads reply ({len(p['threads_reply'])} chars): POST {TH}/me/threads media_type=TEXT reply_to_id=<threads post id> -> threads_publish")
             continue
         migrate(p)
         for x in todo:
@@ -151,6 +165,16 @@ def main(qpath, dry=False):
             if p['status'] == 'published': p.setdefault('published_at', now.isoformat())
             json.dump(q, open(qpath, 'w'), ensure_ascii=False, indent=1)
             print(p['slug'], x, p[f'status_{x}'], get_id(p, x) or p.get(f'error_{x}', ''))
+        # Threads reply (threads_reply): sent once the main Threads post exists; a failure is retried on the next run.
+        if 'threads' in only and need_reply(p) and get_id(p, 'threads'):
+            try:
+                if len(p['threads_reply']) > THREADS_MAX: raise RuntimeError(f"threads_reply is {len(p['threads_reply'])} characters; not sent")
+                p.setdefault('ids', {})['threads_reply'] = post_threads_reply(get_id(p, 'threads'), p['threads_reply'])
+                p.pop('error_threads_reply', None)
+            except Exception as e:
+                p['error_threads_reply'] = str(e)[:500]
+            json.dump(q, open(qpath, 'w'), ensure_ascii=False, indent=1)
+            print(p['slug'], 'threads_reply', p['ids'].get('threads_reply') or p.get('error_threads_reply', ''))
 
 if __name__ == '__main__':
     main(sys.argv[1], '--dry' in sys.argv)
