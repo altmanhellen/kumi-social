@@ -87,8 +87,16 @@
   "threads_text": "Хотите сделать фото, а у вас вырывается make a photo? 📸 Фото в английском не делают, а «берут»: take.\n\n❌ make a photo\n✅ take a photo\n\nCould you take a photo of us, please?\n(Не могли бы вы нас сфотографировать?)\n\nА хорошими фото надо делиться:\n✅ выложить фото — post a photo.\n\n📌 Сохраните, пригодится в отпуске. В Kumi 326 таких сочетаний, первые 30 бесплатно.",
   "publish_at": "2026-11-19T17:00:00+00:00",
   "approved": true,
-  "status": "pending",
-  "ids": {}
+  "status": "published",
+  "ids": {
+   "instagram": "18128227918898113",
+   "threads": "18100623794643171"
+  },
+  "status_instagram": "published",
+  "status_threads": "published",
+  "facebook_post_id": "1471238842734444_122111236257541189",
+  "status_facebook": "published",
+  "published_at": "2026-11-19T17:00:58.858605+00:00"
  },
  {
   "slug": "w47-02-pass-take-exam",
