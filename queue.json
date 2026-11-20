@@ -106,8 +106,16 @@
   "threads_text": "«Завтра сдаю экзамен» — и кто-то пишет: Tomorrow I pass the exam. Звучит очень уверенно. Даже слишком!\n\n✅ take an exam — сдавать (результат ещё неизвестен)\n✅ pass an exam — сдать экзамен (экзамен уже сдан — вы прошли испытание)\nСдавали, но не сдали — fail an exam 🥲\n\n💬 I'm taking my driving exam next Tuesday.\n💬 Good news! I passed the exam, so now I can start university.\n\nОтправьте тому, у кого скоро экзамен. Пусть будет pass 🍀",
   "publish_at": "2026-11-20T17:00:00+00:00",
   "approved": true,
-  "status": "pending",
-  "ids": {}
+  "status": "published",
+  "ids": {
+   "instagram": "18115113985879652",
+   "threads": "17931801459183233"
+  },
+  "status_instagram": "published",
+  "status_threads": "published",
+  "facebook_post_id": "1471238842734444_122111744619541189",
+  "status_facebook": "published",
+  "published_at": "2026-11-20T17:01:06.249290+00:00"
  },
  {
   "slug": "w47-03-do-me-a-favour",
