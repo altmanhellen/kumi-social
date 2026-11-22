@@ -125,9 +125,18 @@
   "threads_text": "Квиз 🧩 Вы уезжаете на выходные, а кошку кормить некому. Как попросить друга об одолжении?\n\n🔸 make me a favour\n🔸 do me a favour\n\nПишите ответ в комментариях 👇",
   "publish_at": "2026-11-22T17:00:00+00:00",
   "approved": true,
-  "status": "pending",
-  "ids": {},
-  "threads_reply": "✅ Правильно: do me a favour.\n\nCould you do me a favour and feed my cat on Sunday?\n(Можешь сделать мне одолжение и покормить мою кошку в воскресенье?)\n\n#английский #учиманглийский #квиз #коллокации #englishcollocations"
+  "status": "published",
+  "ids": {
+   "instagram": "17957152623042597",
+   "threads": "17996998598849250",
+   "threads_reply": "18173801266484040"
+  },
+  "threads_reply": "✅ Правильно: do me a favour.\n\nCould you do me a favour and feed my cat on Sunday?\n(Можешь сделать мне одолжение и покормить мою кошку в воскресенье?)\n\n#английский #учиманглийский #квиз #коллокации #englishcollocations",
+  "status_instagram": "published",
+  "status_threads": "published",
+  "facebook_post_id": "1471238842734444_122112557775541189",
+  "status_facebook": "published",
+  "published_at": "2026-11-22T17:00:44.466282+00:00"
  },
  {
   "slug": "w47-04-pay-attention",
