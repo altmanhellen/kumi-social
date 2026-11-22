@@ -120,14 +120,19 @@ def L_swap(c):
 def L_versus(c):
     # like post 3: two overlapping cards with a yellow "≠" square between them
     s = f'<rect width="{W}" height="{H}" fill="{c.get("bg", "#BFE8CF")}"/>' + logo()
-    s += hand(1020, 120, c['kicker'], 56, anchor='end') + T(1020, 205, c['kicker2'], 58, anchor='end')
+    if c.get('kicker'):
+        s += hand(1020, 120, c['kicker'], 56, anchor='end') + T(1020, 205, c.get('kicker2', ''), 58, anchor='end')
+    elif c.get('tag'):
+        s += tag(c['tag'], 690, 62, 330)
     s += card(60, 310, 560, 580, rot=-6) + card(470, 640, 540, 560, fill=c.get('fill2', '#F9DCCB'), rot=-6)
     s += '<g transform="rotate(-6 540 750)">'
     s += hand(120, 430, c['a_note'], 52) + lines(120, 530, c['a'], 84, 92)
+    if c.get('a_sub'): s += lines(120, 530 + 92 * len(c['a']) + 10, c['a_sub'], 36, 44, wt=500, fill=MUTED)
     s += hand(540, 950, c['b_note'], 52) + lines(540, 1050, c['b'], 84, 92)
+    if c.get('b_sub'): s += lines(540, 1050 + 92 * len(c['b']) + 10, c['b_sub'], 36, 44, wt=500, fill=MUTED)
     s += f'<rect x="440" y="650" width="210" height="210" rx="40" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/>'
     s += T(545, 810, '≠', 170, anchor='middle') + '</g>'
-    s += T(540, 1290, c['foot'], 38, wt=500, anchor='middle')
+    if c.get('foot'): s += T(540, 1290, c['foot'], 38, wt=500, anchor='middle')
     return s
 
 def L_pair(c):
@@ -154,9 +159,9 @@ def L_quiz(c):
     s += f'<g transform="rotate(2 540 430)">' + hand(140, 360, c['note'], 60) + lines(140, 470, c['q'], 92, 100) + '</g>'
     y = 700
     for letter, opt in zip('AB', c['options']):
-        s += card(110, y, 860, 170, fill='#FFFFFF', rot=-1, r=36)
-        s += f'<g transform="rotate(-1 540 {y + 85})"><circle cx="200" cy="{y + 85}" r="50" fill="{BLUE}" stroke="{INK}" stroke-width="6"/>'
-        s += T(200, y + 104, letter, 56, fill='#FFFFFF', anchor='middle') + T(290, y + 108, opt, 70) + '</g>'
+        s += card(110, y, 860, 170, fill=c.get('opt_fill', '#C9B6F2'), rot=-1, r=36)
+        s += f'<g transform="rotate(-1 540 {y + 85})"><circle cx="200" cy="{y + 85}" r="50" fill="{c.get("letter_fill", YELLOW)}" stroke="{INK}" stroke-width="6"/>'
+        s += T(200, y + 104, letter, 56, fill=INK, anchor='middle') + T(290, y + 108, opt, 70) + '</g>'
         y += 220
     s += hand(540, 1250, c['foot'], 60, fill=INK, anchor='middle')
     return s
@@ -164,11 +169,15 @@ def L_quiz(c):
 def L_list(c):
     # night sky: title, crossed-out calque, three stacked phrase cards
     s = stars(c.get('bg', '#26306B'), '#FFE58A') + logo()
-    s += f'<circle cx="930" cy="150" r="80" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/><circle cx="970" cy="120" r="70" fill="{c.get("bg", "#26306B")}"/>'
+    if c.get('moon', True):
+        s += f'<circle cx="930" cy="150" r="80" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/><circle cx="970" cy="120" r="70" fill="{c.get("bg", "#26306B")}"/>'
+    elif c.get('emoji_badge'):
+        s += f'<circle cx="930" cy="150" r="80" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/>' + T(930, 178, c['emoji_badge'], 80, anchor='middle')
     s += hand(80, 290, c['note'], 60, fill='#FFE58A') + lines(80, 380, c['title'], 74, 84, fill='#FFFFFF')
     yb = 380 + 84 * (len(c['title']) - 1) + 80
     s += T(80, yb, c['wrong'], 52, fill='#FF8A7A') + strike(80, yb - 17, c.get('wrong_w', 300), color='#FF8A7A', sw=6)
-    s += T(80 + c.get('wrong_w', 300) + 40, yb, c['wrong_note'], 40, wt=500, fill='#D9DCF5')
+    if c.get('wrong_note'):
+        s += T(80 + c.get('wrong_w', 300) + 40, yb, c['wrong_note'], 40, wt=500, fill='#D9DCF5')
     y = yb + 70; fills = ['#FFFAEE', '#FFE58A', '#B4EAF6']
     for i, (en, ru) in enumerate(c['items']):
         rot = [-2, 1.5, -1][i % 3]

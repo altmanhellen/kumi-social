@@ -15,6 +15,15 @@
   "b1.pay-attention": "w47-04-pay-attention",
   "b2.fast-asleep": "w47-05-fast-asleep",
   "b2.sleep-soundly": "w47-05-fast-asleep",
-  "b2.deep-sleep": "w47-05-fast-asleep"
+  "b2.deep-sleep": "w47-05-fast-asleep",
+  "b1.make-sense": "w48-01-make-sense",
+  "b1.keep-a-promise": "w48-02-keep-break-promise",
+  "b1.break-a-promise": "w48-02-keep-break-promise",
+  "b1.make-an-effort": "w48-03-make-an-effort",
+  "b1.lose-weight": "w48-04-lose-weight",
+  "b1.put-on-weight": "w48-04-lose-weight",
+  "a2.make-money": "w48-05-money",
+  "a2.save-money": "w48-05-money",
+  "a2.borrow-money": "w48-05-money"
  }
 }
