@@ -4,7 +4,7 @@ Usage: python3 svgcards.py weeks/<week>/week.json   -> writes <slug>.svg next to
        then: node svg2png.js weeks/<week>            -> <slug>.png for publishing (IG/Threads need PNG/JPEG).
 
 Each SVG is self-contained: text stays live (editable in Figma/Illustrator) and the fonts it uses
-(Rubik 500/700, Marck Script) are embedded as subset WOFF2 so it renders the same everywhere.
+(Rubik 400/500/700, Marck Script) are embedded as subset WOFF2 so it renders the same everywhere.
 
 Each post in week.json has "layout" and "card" fields; layouts: swap, versus, pair, quiz, list.
 Lines are given pre-broken (lists of strings), because SVG does not wrap text.
@@ -21,6 +21,7 @@ INK = '#1E1A16'; CREAM = '#FFFAEE'; RED = '#DE5B45'; GREEN = '#3E8A5A'; MUTED = 
 YELLOW = '#FFD91A'; BLUE = '#3B55F0'; SKY = '#B4EAF6'
 
 FACES = [  # family, weight, files
+    ('Rubik', 400, ['rubik-latin-400-normal.woff2', 'rubik-cyrillic-400-normal.woff2']),
     ('Rubik', 500, ['rubik-latin-500-normal.woff2', 'rubik-cyrillic-500-normal.woff2']),
     ('Rubik', 700, ['rubik-latin-700-normal.woff2', 'rubik-cyrillic-700-normal.woff2']),
     ('Marck Script', 400, ['marck-script-latin-400-normal.woff2', 'marck-script-cyrillic-400-normal.woff2']),
@@ -52,7 +53,9 @@ def lines(x, y, arr, size, lh, **kw):
     return ''.join(T(x, y + i * lh, s, size, **kw) for i, s in enumerate(arr))
 
 def hand(x, y, s, size=56, fill=MUTED, **kw):
-    return T(x, y, s, size, fam='Marck Script', wt=400, fill=fill, **kw)
+    # Elena's style (W47 edits): bolder, tighter handwriting -> same-colour stroke + narrower word gaps
+    ex = (f'stroke="{fill}" stroke-width="{size * 0.03:.1f}" stroke-linejoin="round" letter-spacing="0.02em" word-spacing="-0.15em" ' + kw.pop('extra', ''))
+    return T(x, y, s, size, fam='Marck Script', wt=400, fill=fill, extra=ex, **kw)
 
 def card(x, y, w, h, fill=CREAM, rot=0, r=44, sw=7):
     cx, cy = x + w / 2, y + h / 2
@@ -65,7 +68,7 @@ def strike(x, y, w, color=RED, sw=9):
 def logo(x=56, y=52):
     return (f'<g transform="translate({x} {y})">'
             f'<rect width="262" height="104" rx="52" fill="{CREAM}" stroke="{INK}" stroke-width="6"/>'
-            f'<g transform="translate(30 20) rotate(-6 32 32)">'
+            f'<g transform="translate(30 20)">'
             f'<rect x="0" y="0" width="46" height="46" rx="10" fill="{CREAM}" stroke="{INK}" stroke-width="5"/>'
             f'<rect x="18" y="16" width="46" height="46" rx="10" fill="{SKY}" stroke="{INK}" stroke-width="5"/>'
             f'<path d="M18 26 a10 10 0 0 1 10 -10 H46 V36 a10 10 0 0 1 -10 10 H18 Z" fill="{YELLOW}" stroke="{INK}" stroke-width="5"/>'
@@ -75,7 +78,7 @@ def logo(x=56, y=52):
 
 def tag(s, x, y, w, fill='#CDB8F8', rot=2):
     return (f'<g transform="rotate({rot} {x + w / 2} {y + 40})"><rect x="{x}" y="{y}" width="{w}" height="80" rx="30" fill="{fill}" '
-            f'stroke="{INK}" stroke-width="6"/>{T(x + w / 2, y + 52, s, 36, wt=500, anchor="middle")}</g>')
+            f'stroke="{INK}" stroke-width="6"/>{T(x + w / 2, y + 52, s, 36, wt=400, anchor="middle")}</g>')
 
 def lattice(bg, line):
     p = ''.join(f'<path d="M{x} -20 L{x + 760} 1370 M{x} 1370 L{x + 760} -20" />' for x in range(-760, 1100, 120))
@@ -112,9 +115,9 @@ def L_swap(c):
     s += f'<g transform="rotate(-3 540 690)">'
     s += hand(c.get('right_x', 250), 520, c['right'], 150, fill=GREEN)
     s += T(180, 680, c['pre'], 140) + T(c.get('wrong_x', 300), 680, c['wrong'], 140, fill=RED)
-    s += strike(c.get('wrong_x', 300), 640, c.get('wrong_w', 300), color='#B23A2A', sw=12)
+    s += strike(c.get('wrong_x', 300), 640, c.get('wrong_w', 300) + 40, color=RED, sw=9)
     s += T(180, 840, c['post'], 140)
-    s += T(190, 970, c['ru'], 44, wt=500, fill=MUTED) + '</g>'
+    s += T(190, 970, c['ru'], 44, wt=400, fill=MUTED) + '</g>'
     return s
 
 def L_versus(c):
@@ -126,10 +129,10 @@ def L_versus(c):
         s += tag(c['tag'], 690, 62, 330)
     s += card(60, 310, 560, 580, rot=-6) + card(470, 640, 540, 560, fill=c.get('fill2', '#F9DCCB'), rot=-6)
     s += '<g transform="rotate(-6 540 750)">'
-    s += hand(120, 430, c['a_note'], 52) + lines(120, 530, c['a'], 84, 92)
-    if c.get('a_sub'): s += lines(120, 530 + 92 * len(c['a']) + 10, c['a_sub'], 36, 44, wt=500, fill=MUTED)
-    s += hand(540, 950, c['b_note'], 52) + lines(540, 1050, c['b'], 84, 92)
-    if c.get('b_sub'): s += lines(540, 1050 + 92 * len(c['b']) + 10, c['b_sub'], 36, 44, wt=500, fill=MUTED)
+    s += hand(120, 430, c['a_note'], c.get('note_size', 52)) + lines(120, 530, c['a'], 84, 92)
+    if c.get('a_sub'): s += lines(120, 530 + 92 * len(c['a']) + 10, c['a_sub'], 36, 44, wt=400, fill=MUTED)
+    s += hand(540, 950, c['b_note'], c.get('note_size', 52)) + lines(540, 1050, c['b'], 84, 92)
+    if c.get('b_sub'): s += lines(540, 1050 + 92 * len(c['b']) + 10, c['b_sub'], 36, 44, wt=400, fill=MUTED)
     s += f'<rect x="440" y="650" width="210" height="210" rx="40" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/>'
     s += T(545, 810, '≠', 170, anchor='middle') + '</g>'
     if c.get('foot'): s += T(540, 1290, c['foot'], 38, wt=500, anchor='middle')
@@ -141,12 +144,12 @@ def L_pair(c):
     s += f'<path d="M0 700 L{W} 640 L{W} {H} L0 {H} Z" fill="{c.get("bg2", "#F6C9B2")}" stroke="{INK}" stroke-width="7"/>'
     s += logo()
     s += hand(80, 300, c['note1'], 62) + T(70, 440, c['big1'], c.get('size1', 150))
-    s += T(80, 530, c['ru1'], 50, wt=500, fill=MUTED)
+    s += T(80, 530, c['ru1'], 50, wt=400, fill=MUTED)
     if c.get('wrong1'):
         x, y = c.get('wrong1_x', 520), c.get('wrong1_y', 530)
         s += T(x, y, c['wrong1'], 50, wt=700, fill=RED) + strike(x, y - 17, c.get('wrong1_w', 300), sw=6)
     s += hand(80, 870, c['note2'], 62) + T(70, 1010, c['big2'], c.get('size2', 150))
-    s += T(80, 1100, c['ru2'], 50, wt=500, fill=MUTED)
+    s += T(80, 1100, c['ru2'], 50, wt=400, fill=MUTED)
     s += f'<g transform="rotate(8 860 730)"><circle cx="860" cy="730" r="170" fill="{YELLOW}" stroke="{INK}" stroke-width="7"/>'
     s += hand(860, 670, c['badge_note'], 46, fill=MUTED, anchor='middle') + lines(860, 740, c['badge'], 60, 66, anchor='middle') + '</g>'
     s += waves(1230, c.get('wave', '#E2683A'), 2)
@@ -182,7 +185,7 @@ def L_list(c):
     for i, (en, ru) in enumerate(c['items']):
         rot = [-2, 1.5, -1][i % 3]
         s += card(70, y, 940, 190, fill=fills[i % 3], rot=rot, r=36)
-        s += f'<g transform="rotate({rot} 540 {y + 95})">' + T(120, y + 92, en, 72) + T(120, y + 152, ru, 42, wt=500, fill=MUTED) + '</g>'
+        s += f'<g transform="rotate({rot} 540 {y + 95})">' + T(120, y + 92, en, 72) + T(120, y + 152, ru, 42, wt=400, fill=MUTED) + '</g>'
         y += 225
     return s
 

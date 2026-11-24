@@ -23,7 +23,7 @@
     "right": "makes",
     "right_x": 360,
     "post": "sense",
-    "ru": "это имеет смысл"
+    "ru": "Это имеет смысл"
    },
    "caption": "«Это имеет смысл» — и хочется сказать it has sense. 🤔 Но смысл в английском не «имеют», а «делают»: make.\n\n❌ it has sense\n✅ it makes sense\n\nPrices go up every month, so it makes sense to buy the tickets now.\n(Цены растут каждый месяц, так что есть смысл купить билеты сейчас)\n\nА если ничего не понятно — it doesn't make sense.\n\nI read the instructions twice, but they didn't make sense.\n(Я дважды прочитал инструкцию, но так ничего и не понял)\n\n📌 Сохраните, чтобы не забыть.\n\n#английский #учиманглийский #коллокации #englishcollocations #разговорныйанглийский",
    "threads_text": "«Это имеет смысл» — и хочется сказать it has sense. 🤔 Но смысл в английском не «имеют», а «делают»: make.\n\n❌ it has sense\n✅ it makes sense\n\nPrices go up every month, so it makes sense to buy the tickets now.\n(Цены растут каждый месяц, так что есть смысл купить билеты сейчас)\n\nА если ничего не понятно — it doesn't make sense.\n\n📌 Сохраните, чтобы не забыть."
@@ -52,7 +52,8 @@
      "break",
      "a promise"
     ],
-    "fill2": "#C9E7FF"
+    "fill2": "#C9E7FF",
+    "note_size": 46
    },
    "caption": "«Нарушить обещание» — violate a promise? Звучит как статья закона. 😅\n\nОбещания в английском держат и «ломают»:\n\n✅ keep a promise — сдержать обещание\n✅ break a promise — нарушить обещание\n\n💬 He always keeps his promises, so people believe him.\n(Он всегда держит слово, поэтому ему верят)\n💬 She broke her promise and told everyone my secret.\n(Она нарушила обещание и всем рассказала мой секрет)\n\nА вы держите обещания, которые даёте себе в январе? 👇\n\n#английский #английскийязык #учиманглийский #коллокации #englishcollocations",
    "threads_text": "«Нарушить обещание» — violate a promise? Звучит как статья закона. 😅\n\nОбещания в английском держат и «ломают»:\n\n✅ keep a promise — сдержать обещание\n✅ break a promise — нарушить обещание\n\n💬 He always keeps his promises, so people believe him.\n💬 She broke her promise and told everyone my secret.\n\nА вы держите обещания, которые даёте себе в январе? 👇"
@@ -106,10 +107,6 @@
     "big1": "lose weight",
     "size1": 128,
     "ru1": "похудеть",
-    "wrong1": "throw weight",
-    "wrong1_x": 80,
-    "wrong1_y": 610,
-    "wrong1_w": 330,
     "note2": "а после праздников —",
     "big2": "put on weight",
     "size2": 118,
@@ -136,7 +133,7 @@
    "publish_at": "2026-12-02T17:00:00+00:00",
    "layout": "list",
    "card": {
-    "bg": "#1F5C4A",
+    "bg": "#138A55",
     "moon": false,
     "emoji_badge": "$",
     "note": "про деньги",
