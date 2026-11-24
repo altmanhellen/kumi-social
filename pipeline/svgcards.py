@@ -4,7 +4,7 @@ Usage: python3 svgcards.py weeks/<week>/week.json   -> writes <slug>.svg next to
        then: node svg2png.js weeks/<week>            -> <slug>.png for publishing (IG/Threads need PNG/JPEG).
 
 Each SVG is self-contained: text stays live (editable in Figma/Illustrator) and the fonts it uses
-(Rubik 400/500/700, Marck Script) are embedded as subset WOFF2 so it renders the same everywhere.
+(Rubik 400/500/700, Caveat 700) are embedded as subset WOFF2 so it renders the same everywhere.
 
 Each post in week.json has "layout" and "card" fields; layouts: swap, versus, pair, quiz, list.
 Lines are given pre-broken (lists of strings), because SVG does not wrap text.
@@ -17,14 +17,14 @@ from fontTools import subset as ftsubset
 HERE = pathlib.Path(__file__).parent
 FONTS = HERE / 'fonts'
 W, H = 1080, 1350
-INK = '#1E1A16'; CREAM = '#FFFAEE'; RED = '#DE5B45'; GREEN = '#3E8A5A'; MUTED = '#4A3F36'
+INK = '#1E1A16'; CREAM = '#FFFAEE'; RED = '#DA563E'; GREEN = '#3E8A5A'; MUTED = '#4A3F36'
 YELLOW = '#FFD91A'; BLUE = '#3B55F0'; SKY = '#B4EAF6'
 
 FACES = [  # family, weight, files
     ('Rubik', 400, ['rubik-latin-400-normal.woff2', 'rubik-cyrillic-400-normal.woff2']),
     ('Rubik', 500, ['rubik-latin-500-normal.woff2', 'rubik-cyrillic-500-normal.woff2']),
     ('Rubik', 700, ['rubik-latin-700-normal.woff2', 'rubik-cyrillic-700-normal.woff2']),
-    ('Marck Script', 400, ['marck-script-latin-400-normal.woff2', 'marck-script-cyrillic-400-normal.woff2']),
+    ('Caveat', 700, ['caveat-latin-700-normal.woff2', 'caveat-cyrillic-700-normal.woff2']),
 ]
 
 def font_css(text):
@@ -53,9 +53,8 @@ def lines(x, y, arr, size, lh, **kw):
     return ''.join(T(x, y + i * lh, s, size, **kw) for i, s in enumerate(arr))
 
 def hand(x, y, s, size=56, fill=MUTED, **kw):
-    # Elena's style (W47 edits): bolder, tighter handwriting -> same-colour stroke + narrower word gaps
-    ex = (f'stroke="{fill}" stroke-width="{size * 0.03:.1f}" stroke-linejoin="round" letter-spacing="0.02em" word-spacing="-0.15em" ' + kw.pop('extra', ''))
-    return T(x, y, s, size, fam='Marck Script', wt=400, fill=fill, extra=ex, **kw)
+    # handwriting = Caveat Bold (Elena's Figma edits, 2026-11-24)
+    return T(x, y, s, size, fam='Caveat', wt=700, fill=fill, **kw)
 
 def card(x, y, w, h, fill=CREAM, rot=0, r=44, sw=7):
     cx, cy = x + w / 2, y + h / 2
@@ -113,7 +112,7 @@ def L_swap(c):
     s = lattice(c.get('bg', '#FFCB3D'), c.get('line', '#F29A1F')) + logo() + tag(c['tag'], 690, 62, 330)
     s += card(110, 330, 860, 720, rot=-3)
     s += f'<g transform="rotate(-3 540 690)">'
-    s += hand(c.get('right_x', 250), 520, c['right'], 150, fill=GREEN)
+    s += hand(c.get('right_x', 250), 520, c['right'], 175, fill=GREEN)
     s += T(180, 680, c['pre'], 140) + T(c.get('wrong_x', 300), 680, c['wrong'], 140, fill=RED)
     s += strike(c.get('wrong_x', 300), 640, c.get('wrong_w', 300) + 40, color=RED, sw=9)
     s += T(180, 840, c['post'], 140)
